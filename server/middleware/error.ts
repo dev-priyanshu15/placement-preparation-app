@@ -1,6 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import ErrorHandler from "../utils/ErrorHandler";
 
+/**
+ * Middleware for handling errors in the application
+ * @param {any} err - The error object
+ * @param {Request} req - The Express request object
+ * @param {Response} res - The Express response object
+ * @param {NextFunction} next - The Express next function
+ * @returns {void} Sends a JSON response with error details
+ *
+ * @throws {ErrorHandler} Custom error with status code 400 for specific error cases
+ */
 export const ErrorMiddleware = (
   err: any,
   req: Request,
