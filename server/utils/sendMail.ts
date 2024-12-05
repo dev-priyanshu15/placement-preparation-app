@@ -10,6 +10,16 @@ interface EmailOptions{
     data: {[key:string]:any};
 }
 
+/**
+ * Sends an email using the provided email options.
+ * @param {EmailOptions} options - The email options object.
+ * @param {string} options.email - The recipient's email address.
+ * @param {string} options.subject - The subject of the email.
+ * @param {string} options.template - The name of the email template file.
+ * @param {object} options.data - The data to be rendered in the email template.
+ * @returns {Promise<void>} A promise that resolves when the email is sent successfully.
+ * @throws {Error} If there's an issue with sending the email.
+ */
 const sendMail = async (options: EmailOptions):Promise <void> => {
     const transporter: Transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,

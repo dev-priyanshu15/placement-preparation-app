@@ -38,6 +38,13 @@ export const refreshTokenOptions: ITokenOptions = {
   secure: true,
 };
 
+/**
+ * Sends authentication tokens to the user and stores the session in Redis.
+ * @param {IUser} user - The user object containing user information.
+ * @param {number} statusCode - The HTTP status code to be sent in the response.
+ * @param {Response} res - The Express response object.
+ * @returns {void} This method doesn't return a value, it sends a JSON response.
+ */
 export const sendToken = (user: IUser, statusCode: number, res: Response) => {
   const accessToken = user.SignAccessToken();
   const refreshToken = user.SignRefreshToken();
