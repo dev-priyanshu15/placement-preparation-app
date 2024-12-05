@@ -5,6 +5,11 @@ interface MonthData {
   count: number;
 }
 
+/**
+ * Generates data for the last 12 months based on the provided model
+ * @param {Model<T>} model - The Mongoose model to query data from
+ * @returns {Promise<{ last12Months: MonthData[] }>} An object containing an array of monthly data
+ */
 export async function generateLast12MothsData<T extends Document>(
   model: Model<T>
 ): Promise<{ last12Months: MonthData[] }> {
