@@ -15,6 +15,14 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // create order
 export const createOrder = CatchAsyncError(
+  /**
+   * Process a course purchase order
+   * @param {Request} req - Express request object containing course and payment information
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next middleware function
+   * @returns {Promise<void>} Resolves when the order is processed successfully
+   * @throws {ErrorHandler} If payment is not authorized, course already purchased, course not found, or any other error occurs
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { courseId, payment_info } = req.body as IOrder;
@@ -132,6 +140,14 @@ export const sendStripePublishableKey = CatchAsyncError(
 
 // new payment
 export const newPayment = CatchAsyncError(
+  /**
+   * Creates a Stripe payment intent for EduSphere course services.
+   * @param {Request} req - Express request object containing payment details in the body.
+   * @param {Response} res - Express response object used to send the created payment intent.
+   * @param {NextFunction} next - Express next middleware function for error handling.
+   * @returns {Promise<void>} Sends a JSON response with the client secret on success, or passes error to next middleware.
+   * @throws {ErrorHandler} If there's an error during payment intent creation, it's passed to the next middleware.
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const myPayment = await stripe.paymentIntents.create({
