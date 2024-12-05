@@ -6,6 +6,14 @@ import cloudinary from "cloudinary";
 
 // create layout
 export const createLayout = CatchAsyncError(
+  /**
+   * Creates a new layout based on the provided type (Banner, FAQ, or Categories).
+   * @param {Request} req - Express request object containing the layout data in the body.
+   * @param {Response} res - Express response object used to send the API response.
+   * @param {NextFunction} next - Express next middleware function for error handling.
+   * @returns {Promise<void>} Sends a JSON response with success status and message, or passes errors to the next middleware.
+   * @throws {ErrorHandler} If the layout type already exists (400) or for any server errors (500).
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { type } = req.body;
@@ -70,6 +78,14 @@ export const createLayout = CatchAsyncError(
 
 // Edit layout
 export const editLayout = CatchAsyncError(
+  /**
+   * Updates the layout based on the provided type (Banner, FAQ, or Categories).
+   * @param {Request} req - Express request object containing the layout update data in the body.
+   * @param {Response} res - Express response object used to send the API response.
+   * @param {NextFunction} next - Express next middleware function for error handling.
+   * @returns {Promise<void>} Sends a JSON response with success status and message, or passes error to next middleware.
+   * @throws {ErrorHandler} Throws a custom ErrorHandler with a 500 status code if an error occurs during processing.
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { type } = req.body;
