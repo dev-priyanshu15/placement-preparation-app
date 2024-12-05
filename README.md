@@ -111,4 +111,4 @@ Please ensure your code follows our coding guidelines.
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
-For inquiries or feedback, please reach out to the project maintainer at [your-email@example.com].
+For inquiries or feedback, please reach out to the project maintainer at [s.priyanshu.coder@gmail.com].
