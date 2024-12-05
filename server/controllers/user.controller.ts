@@ -29,6 +29,14 @@ interface IRegistrationBody {
 }
 
 export const registrationUser = CatchAsyncError(
+  /**
+   * Handles user registration process
+   * @param {Request} req - Express request object containing user registration data in the body
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next middleware function
+   * @returns {Promise<void>} Sends a JSON response with registration status or calls next with an error
+   * @throws {ErrorHandler} If email already exists or if there's an error in the registration process
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { name, email, password } = req.body;
@@ -81,6 +89,11 @@ interface IActivationToken {
   activationCode: string;
 }
 
+/**
+ * Creates an activation token for a user
+ * @param {any} user - The user object for which the activation token is being created
+ * @returns {IActivationToken} An object containing the activation token and activation code
+ */
 export const createActivationToken = (user: any): IActivationToken => {
   const activationCode = Math.floor(1000 + Math.random() * 9000).toString();
 
@@ -105,6 +118,14 @@ interface IActivationRequest {
 }
 
 export const activateUser = CatchAsyncError(
+  /**
+   * Activates a user account using the provided activation token and code
+   * @param {Request} req - Express request object containing activation_token and activation_code in the body
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next middleware function
+   * @returns {Promise<void>} Sends a JSON response with success status or calls next with an error
+   * @throws {ErrorHandler} If activation code is invalid, email already exists, or any other error occurs
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { activation_token, activation_code } =
@@ -148,6 +169,16 @@ interface ILoginRequest {
 }
 
 export const loginUser = CatchAsyncError(
+  /**
+   * Authenticates a user based on email and password
+   * @param {Request} req - Express request object containing login credentials
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next middleware function
+   * @returns {void} Sends a token response or passes control to error handler
+   * @throws {ErrorHandler} 400 - If email or password is missing
+   * @throws {ErrorHandler} 400 - If email or password is invalid
+   * @throws {ErrorHandler} 400 - For any other errors during the process
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, password } = req.body as ILoginRequest;
@@ -176,6 +207,14 @@ export const loginUser = CatchAsyncError(
 
 // logout user
 export const logoutUser = CatchAsyncError(
+  /**
+   * Logs out the user by clearing cookies and removing user data from Redis.
+   * @param {Request} req - Express request object containing user information.
+   * @param {Response} res - Express response object for sending the logout response.
+   * @param {NextFunction} next - Express next function for error handling.
+   * @returns {Promise<void>} A promise that resolves when the logout process is complete.
+   * @throws {ErrorHandler} If an error occurs during the logout process.
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       res.cookie("access_token", "", { maxAge: 1 });
@@ -194,6 +233,14 @@ export const logoutUser = CatchAsyncError(
 
 // update access token
 export const updateAccessToken = CatchAsyncError(
+  /**
+   * Refreshes the user's authentication tokens.
+   * @param {Request} req - Express request object containing refresh token in cookies.
+   * @param {Response} res - Express response object for setting new cookies.
+   * @param {NextFunction} next - Express next middleware function.
+   * @returns {Promise<void>} Calls next() on success, or next(error) on failure.
+   * @throws {ErrorHandler} If refresh token is invalid, session not found, or any other error occurs.
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const refresh_token = req.cookies.refresh_token as string;
@@ -289,6 +336,14 @@ interface IUpdateUserInfo {
 }
 
 export const updateUserInfo = CatchAsyncError(
+  /**
+   * Updates user information and caches the updated user data
+   * @param {Request} req - Express request object containing user data in the body
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next middleware function
+   * @returns {Promise<void>} Sends a JSON response with updated user data or calls next with an error
+   * @throws {ErrorHandler} If an error occurs during the update process
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { name } = req.body as IUpdateUserInfo;
@@ -321,6 +376,14 @@ interface IUpdatePassword {
 }
 
 export const updatePassword = CatchAsyncError(
+  /**
+   * Updates the user's password
+   * @param {Request} req - Express request object containing the old and new passwords in the body
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next middleware function
+   * @returns {Promise<void>} Sends a JSON response with the updated user object or calls next with an error
+   * @throws {ErrorHandler} If old or new password is missing, user is invalid, old password is incorrect, or any other error occurs
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { oldPassword, newPassword } = req.body as IUpdatePassword;
@@ -363,6 +426,14 @@ interface IUpdateProfilePicture {
 
 // update profile picture
 export const updateProfilePicture = CatchAsyncError(
+  /**
+   * Updates the user's profile picture
+   * @param {Request} req - Express request object containing the avatar in the body and user ID in the user property
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next middleware function
+   * @returns {Promise<void>} Sends a JSON response with the updated user object or calls the next middleware with an error
+   * @throws {ErrorHandler} If an error occurs during the process
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { avatar } = req.body as IUpdateProfilePicture;
@@ -424,6 +495,14 @@ export const getAllUsers = CatchAsyncError(
 
 // update user role --- only for admin
 export const updateUserRole = CatchAsyncError(
+  /**
+   * Updates the role of an existing user
+   * @param {Request} req - Express request object containing user email and new role in the body
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next middleware function
+   * @returns {Promise<void>} Sends a JSON response with success status and message, or calls next with an error
+   * @throws {ErrorHandler} If an error occurs during the process
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, role } = req.body;
@@ -445,6 +524,14 @@ export const updateUserRole = CatchAsyncError(
 
 // Delete user --- only for admin
 export const deleteUser = CatchAsyncError(
+  /**
+   * Deletes a user by ID from the database and cache
+   * @param {Request} req - Express request object containing the user ID in params
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next middleware function
+   * @returns {Promise<void>} Sends a JSON response with success status and message, or calls next with an error
+   * @throws {ErrorHandler} If user is not found or any other error occurs during the process
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
