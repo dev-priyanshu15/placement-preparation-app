@@ -14,6 +14,14 @@ import axios from "axios";
 
 // upload course
 export const uploadCourse = CatchAsyncError(
+  /**
+   * Handles the creation of a course with an optional thumbnail upload.
+   * @param {Request} req - Express request object containing the course data in the body.
+   * @param {Response} res - Express response object.
+   * @param {NextFunction} next - Express next middleware function.
+   * @returns {void} This method doesn't return directly, it calls next() or createCourse().
+   * @throws {ErrorHandler} Throws an ErrorHandler with a 500 status code if an error occurs.
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data = req.body;
@@ -37,6 +45,14 @@ export const uploadCourse = CatchAsyncError(
 
 // edit course
 export const editCourse = CatchAsyncError(
+  /**
+   * Updates a course with new data, including thumbnail management.
+   * @param {Request} req - Express request object containing course data and parameters
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next middleware function
+   * @returns {Promise<void>} Sends a JSON response with updated course data or calls next with an error
+   * @throws {ErrorHandler} If an error occurs during the update process
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data = req.body;
@@ -87,6 +103,14 @@ export const editCourse = CatchAsyncError(
 
 // get single course --- without purchasing
 export const getSingleCourse = CatchAsyncError(
+  /**
+   * Retrieves a course by ID, utilizing Redis cache for improved performance.
+   * @param {Request} req - Express request object containing the course ID in params.
+   * @param {Response} res - Express response object used to send the API response.
+   * @param {NextFunction} next - Express next middleware function for error handling.
+   * @returns {Promise<void>} Sends a JSON response with the course data or forwards to error handler.
+   * @throws {ErrorHandler} Forwards any caught errors to the next middleware.
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const courseId = req.params.id;
@@ -119,6 +143,14 @@ export const getSingleCourse = CatchAsyncError(
 
 // get all courses --- without purchasing
 export const getAllCourses = CatchAsyncError(
+  /**
+   * Retrieves a list of courses with selected fields.
+   * @param {Request} req - Express request object
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next middleware function
+   * @returns {Promise<void>} Sends a JSON response with course data or passes an error to the next middleware
+   * @throws {ErrorHandler} Throws a custom error handler with a 500 status code if an error occurs
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const courses = await CourseModel.find().select(
@@ -137,6 +169,14 @@ export const getAllCourses = CatchAsyncError(
 
 // get course content -- only for valid user
 export const getCourseByUser = CatchAsyncError(
+  /**
+   * Retrieve course content for an authenticated user
+   * @param {Request} req - Express request object containing user and course information
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next middleware function
+   * @returns {Promise<void>} Sends a JSON response with course content or calls next with an error
+   * @throws {ErrorHandler} If user is not eligible to access the course or if there's a server error
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userCourseList = req.user?.courses;
@@ -174,6 +214,14 @@ interface IAddQuestionData {
 }
 
 export const addQuestion = CatchAsyncError(
+  /**
+   * Adds a new question to a specific course content
+   * @param {Request} req - Express request object containing the question data in the body
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next middleware function
+   * @returns {Promise<void>} Sends a JSON response with the updated course or calls the next middleware with an error
+   * @throws {ErrorHandler} If the content id is invalid or not found
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { question, courseId, contentId }: IAddQuestionData = req.body;
@@ -229,6 +277,14 @@ interface IAddAnswerData {
 }
 
 export const addAnwser = CatchAsyncError(
+  /**
+   * Adds an answer to a question in a course content
+   * @param {Request} req - Express request object containing the answer data in the body
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next middleware function
+   * @returns {Promise<void>} Sends a JSON response with the updated course or forwards to error handling middleware
+   * @throws {ErrorHandler} If the content id or question id is invalid, or if there's an error in sending email
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { answer, courseId, contentId, questionId }: IAddAnswerData =
@@ -317,6 +373,14 @@ interface IAddReviewData {
 }
 
 export const addReview = CatchAsyncError(
+  /**
+   * Adds a review to a course and updates the course's average rating.
+   * @param {Request} req - The Express request object containing user and course information.
+   * @param {Response} res - The Express response object.
+   * @param {NextFunction} next - The Express next middleware function.
+   * @returns {Promise<void>} A promise that resolves when the review is added and the response is sent.
+   * @throws {ErrorHandler} If the user is not eligible to access the course or if there's a server error.
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userCourseList = req.user?.courses;
@@ -385,6 +449,14 @@ interface IAddReviewData {
   reviewId: string;
 }
 export const addReplyToReview = CatchAsyncError(
+  /**
+   * Adds a reply to a review for a specific course
+   * @param {Request} req - Express request object containing body with comment, courseId, and reviewId
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next middleware function
+   * @returns {Promise<void>} Sends a JSON response with the updated course or calls the next middleware with an error
+   * @throws {ErrorHandler} If the course or review is not found, or if there's a server error
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { comment, courseId, reviewId } = req.body as IAddReviewData;
@@ -443,6 +515,14 @@ export const getAdminAllCourses = CatchAsyncError(
 
 // Delete Course --- only for admin
 export const deleteCourse = CatchAsyncError(
+  /**
+   * Deletes a course by its ID
+   * @param {Request} req - Express request object containing the course ID in params
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next function for error handling
+   * @returns {Promise<void>} Sends a JSON response with success status and message, or calls next with an error
+   * @throws {ErrorHandler} If course is not found or any other error occurs during the process
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
@@ -469,6 +549,14 @@ export const deleteCourse = CatchAsyncError(
 
 // generate video url
 export const generateVideoUrl = CatchAsyncError(
+  /**
+   * Generates a one-time password (OTP) for a video using the VdoCipher API.
+   * @param {Request} req - Express request object containing the video ID in the request body.
+   * @param {Response} res - Express response object used to send the API response.
+   * @param {NextFunction} next - Express next middleware function for error handling.
+   * @returns {Promise<void>} Sends a JSON response with the OTP data or passes an error to the next middleware.
+   * @throws {ErrorHandler} Throws a custom error with a 400 status code if the API request fails.
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { videoId } = req.body;
