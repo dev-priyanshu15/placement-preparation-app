@@ -24,6 +24,14 @@ export const getNotifications = CatchAsyncError(
 
 // update notification status --- only admin
 export const updateNotification = CatchAsyncError(
+  /**
+   * Updates the status of a notification to "read" and retrieves all notifications
+   * @param {Request} req - Express request object containing the notification ID in params
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next middleware function
+   * @returns {Promise<void>} Sends a JSON response with updated notifications or calls next with an error
+   * @throws {ErrorHandler} If notification is not found (404) or if there's a server error (500)
+   */
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const notification = await NotificationModel.findById(req.params.id);
